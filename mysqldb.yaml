@@ -1,0 +1,217 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    checksum/configuration: 43e227d3963e5330834cf14a81901dfe68b0965530ac7cf308113c4391de773a
+  creationTimestamp: "2024-03-05T14:27:46Z"
+  generateName: my-mysql-
+  labels:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: my-mysql
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: mysql
+    app.kubernetes.io/version: 8.0.36
+    apps.kubernetes.io/pod-index: "0"
+    controller-revision-hash: my-mysql-944cc6986
+    helm.sh/chart: mysql-9.22.0
+    statefulset.kubernetes.io/pod-name: my-mysql-0
+  name: my-mysql-0
+  namespace: default
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: StatefulSet
+    name: my-mysql
+    uid: e7c549d0-2306-42ed-b04a-ef3140622272
+  resourceVersion: "19756"
+  uid: d5ad76a6-affa-4696-bdd7-63c51ef5a025
+spec:
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: my-mysql
+              app.kubernetes.io/name: mysql
+          topologyKey: kubernetes.io/hostname
+        weight: 1
+  automountServiceAccountToken: false
+  containers:
+  - env:
+    - name: BITNAMI_DEBUG
+      value: "false"
+    - name: MYSQL_ROOT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: mysql-root-password
+          name: my-mysql
+    - name: MYSQL_PORT
+      value: "3306"
+    - name: MYSQL_DATABASE
+      value: root
+    image: docker.io/bitnami/mysql:8.0.36-debian-12-r8
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      exec:
+        command:
+        - /bin/bash
+        - -ec
+        - |
+          password_aux="${MYSQL_ROOT_PASSWORD:-}"
+          if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
+              password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
+          fi
+          mysqladmin status -uroot -p"${password_aux}"
+      failureThreshold: 3
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    name: mysql
+    ports:
+    - containerPort: 3306
+      name: mysql
+      protocol: TCP
+    readinessProbe:
+      exec:
+        command:
+        - /bin/bash
+        - -ec
+        - |
+          password_aux="${MYSQL_ROOT_PASSWORD:-}"
+          if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
+              password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
+          fi
+          mysqladmin status -uroot -p"${password_aux}"
+      failureThreshold: 3
+      initialDelaySeconds: 5
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources: {}
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: false
+      runAsGroup: 0
+      runAsNonRoot: true
+      runAsUser: 1001
+      seccompProfile:
+        type: RuntimeDefault
+    startupProbe:
+      exec:
+        command:
+        - /bin/bash
+        - -ec
+        - |
+          password_aux="${MYSQL_ROOT_PASSWORD:-}"
+          if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
+              password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
+          fi
+          mysqladmin status -uroot -p"${password_aux}"
+      failureThreshold: 10
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /bitnami/mysql
+      name: data
+    - mountPath: /tmp
+      name: empty-dir
+      subPath: tmp-dir
+    - mountPath: /opt/bitnami/mysql/conf
+      name: empty-dir
+      subPath: app-conf-dir
+    - mountPath: /opt/bitnami/mysql/tmp
+      name: empty-dir
+      subPath: app-tmp-dir
+    - mountPath: /opt/bitnami/mysql/logs
+      name: empty-dir
+      subPath: app-logs-dir
+    - mountPath: /opt/bitnami/mysql/conf/my.cnf
+      name: config
+      subPath: my.cnf
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  hostname: my-mysql-0
+  nodeName: minikube
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext:
+    fsGroup: 1001
+    fsGroupChangePolicy: Always
+  serviceAccount: my-mysql
+  serviceAccountName: my-mysql
+  subdomain: my-mysql
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: data
+    persistentVolumeClaim:
+      claimName: data-my-mysql-0
+  - configMap:
+      defaultMode: 420
+      name: my-mysql
+    name: config
+  - emptyDir: {}
+    name: empty-dir
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2024-03-05T14:27:48Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2024-03-06T07:07:15Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2024-03-06T07:07:15Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2024-03-05T14:27:48Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://f9ff9b1b71e9d95c21f7df0e1a6b38fac1eb4cf9f38cc7efb0aa927fdd0b57fe
+    image: bitnami/mysql:8.0.36-debian-12-r8
+    imageID: docker-pullable://bitnami/mysql@sha256:6c44006e9a2b818bd523bcea96695d4bbd30ae45214a5b77e008859b6455c33e
+    lastState:
+      terminated:
+        containerID: docker://16349c5d5118e81532e3a9de489bfa9d568a818995dfa05bff4f6298704b4194
+        exitCode: 0
+        finishedAt: "2024-03-06T07:06:19Z"
+        reason: Completed
+        startedAt: "2024-03-05T16:24:25Z"
+    name: mysql
+    ready: true
+    restartCount: 2
+    started: true
+    state:
+      running:
+        startedAt: "2024-03-06T07:06:51Z"
+  hostIP: 192.168.49.2
+  phase: Running
+  podIP: 10.244.0.11
+  podIPs:
+  - ip: 10.244.0.11
+  qosClass: BestEffort
+  startTime: "2024-03-05T14:27:48Z"

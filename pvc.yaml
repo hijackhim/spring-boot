@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    pv.kubernetes.io/bind-completed: "yes"
+    pv.kubernetes.io/bound-by-controller: "yes"
+    volume.beta.kubernetes.io/storage-provisioner: k8s.io/minikube-hostpath
+    volume.kubernetes.io/storage-provisioner: k8s.io/minikube-hostpath
+  creationTimestamp: "2024-03-05T17:05:37Z"
+  finalizers:
+  - kubernetes.io/pvc-protection
+  name: mysql-pv-claim
+  namespace: default
+  resourceVersion: "8709"
+  uid: 5fe1bad0-c83f-4612-ad26-ec5976ea7c26
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard
+  volumeMode: Filesystem
+  volumeName: pvc-5fe1bad0-c83f-4612-ad26-ec5976ea7c26
+status:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Gi
+  phase: Bound
