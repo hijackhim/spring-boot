@@ -30,10 +30,10 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: localhost
+          value: 10.244.0.70
         - name: DB_PORT
           value: "3306"
-        - name: DB_NAME
+        - name: MYSQL_DATABASE
           value: mysql
         - name: DB_USERNAME
           value: root
@@ -42,7 +42,7 @@ spec:
             secretKeyRef:
               key: mysql-root-password
               name: my-mysql
-        image: himanshuofficial123/spring-boot-application:3.0
+        image: himanshuofficial123/spring-boot-application:4.0
         imagePullPolicy: IfNotPresent
         name: spring-boot-container
         ports:
